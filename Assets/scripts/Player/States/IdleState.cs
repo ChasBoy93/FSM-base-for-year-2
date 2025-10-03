@@ -1,4 +1,5 @@
 
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 namespace Player
 {
@@ -12,6 +13,10 @@ namespace Player
         public override void Enter()
         {
             base.Enter();
+
+            //change sprite frame to idle
+
+            //player.animator.Play("arthur_stand");
         }
 
         public override void Exit()
@@ -26,14 +31,29 @@ namespace Player
 
         public override void LogicUpdate()
         {
-            player.CheckForRun();
-            Debug.Log("checking for run");
+
+            if( player.CheckForRun() == true )
+            {
+                sm.ChangeState(player.runningState);
+            }
+
+            if (player.CheckForJump() == true)
+            {
+                sm.ChangeState(player.jumpingState);
+            }
+            //Debug.Log("checking for jump");
+
+            //player.CheckForAttack();
+            //Debug.Log("checking for attack");
+
             base.LogicUpdate();
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+            player.rb.linearVelocity = new Vector2(0, player.rb.linearVelocity.y);
         }
+
     }
 }
